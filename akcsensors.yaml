@@ -1,0 +1,103 @@
+# Virtualni sensory
+is_sun_vychod_after8hr:
+  friendly_name: "Kurnik vychod je za 8 hodin"
+  value_template: >-
+    {% if ((as_timestamp(state_attr("sun.sun", "next_rising"))  - as_timestamp(now())) / 3600) > 8 %}
+      true {%- else -%} false {%- endif %}
+goodwe_total_export_year:
+  friendly_name: "Total export to net this year"
+  unit_of_measurement: "kWh"
+  value_template: >-
+    {{(states('sensor.meter_total_energy_export')|int-2215.29 )|round(1)}}
+goodwe_total_energy_pass_year2:
+  friendly_name: "Total export through meeter this year"
+  unit_of_measurement: "kWh"
+  value_template: >-
+    {{(states('sensor.total_energy_export')|int-6728.6)|round(1)}}
+goodwe_total_pv_generation_year:
+  friendly_name: "Total solar generation yhis year"
+  unit_of_measurement: "kWh"
+  value_template: >-
+    {{(states('sensor.total_pv_generation')|int-7243.1)|round(1)}}
+
+# # Virtualni sensory - Parsrovani Aktive Tasks
+is_dhw_request:
+  friendly_name: "Vraci true kdyz je DHW request"
+  value_template: >-
+    {% if states('sensor.akc_new_active_tasks')|int|bitwise_and(1)== 1 -%}
+      true {%- else -%} false {%- endif %}
+is_krb_active:
+  friendly_name: "Vraci true kdyz jede krb cerpadlo"
+  value_template: >-
+    {% if states('sensor.akc_new_active_tasks')|int|bitwise_and(2)== 2 -%}
+      true {%- else -%} false {%- endif %}
+is_night_tarif:
+  friendly_name: "Vraci true kdyz je prave nocni proud"
+  value_template: >-
+    {% if states('sensor.akc_new_active_tasks')|int|bitwise_and(4)== 4 -%}
+      true {%- else -%} false {%- endif %}
+is_floor_pump:
+  friendly_name: "Floor active task"
+  value_template: >-
+    {% if states('sensor.akc_new_active_tasks')|int|bitwise_and(16)== 16 -%}
+      true {%- else -%} false {%- endif %}
+is_bath_request:
+  friendly_name: "Bath radiator request active"
+  value_template: >-
+    {% if states('sensor.akc_new_active_tasks')|int|bitwise_and(64)== 64 -%}
+      true {%- else -%} false {%- endif %}
+is_solar_pump:
+  friendly_name: "Solar cerpadlo on"
+  value_template: >-
+    {% if states('sensor.akc_new_active_tasks')|int|bitwise_and(128)== 128 -%}
+      true {%- else -%} false {%- endif %}
+# Virtualni sensory - Parsrovani Zone
+akc_zone_1:
+  friendly_name: "AKC Zona 1"
+  value_template: >-
+    {% if states('sensor.akc_zone')|int|bitwise_and(1)== 1 -%}
+      true {%- else -%} false {%- endif %}
+akc_zone_3:
+  friendly_name: "AKC Zona 3"
+  value_template: >-
+    {% if states('sensor.akc_zone')|int|bitwise_and(2)== 2 -%}
+      true {%- else -%} false {%- endif %}
+akc_zone_5:
+  friendly_name: "AKC Zona 5"
+  value_template: >-
+    {% if states('sensor.akc_zone')|int|bitwise_and(4)== 4 -%}
+      true {%- else -%} false {%- endif %}
+akc_zone_dhw_pump:
+  friendly_name: "AKC cerpadlo do DHW"
+  value_template: >-
+    {% if states('sensor.akc_zone')|int|bitwise_and(8)== 8 -%}
+      true {%- else -%} false {%- endif %}
+akc_zone_dhw_bath:
+  friendly_name: "AKC cerpadlo do Bath"
+  value_template: >-
+    {% if states('sensor.akc_zone')|int|bitwise_and(16)== 16 -%}
+      true {%- else -%} false {%- endif %}
+akc_zone_hp_dhw:
+  friendly_name: "Heat pump jede do DHW"
+  value_template: >-
+    {% if states('sensor.akc_zone')|int|bitwise_and(32)== 32 -%}
+      true {%- else -%} false {%- endif %}
+akc_zone_krb_and_sol_dhw:
+  friendly_name: "AKC Krb saje z dhw vetve"
+  value_template: >-
+    {% if states('sensor.akc_zone')|int|bitwise_and(64)== 64 -%}
+      true {%- else -%} false {%- endif %}
+# Parsrovani konec
+
+# Template sensor for values of energy bought (active_power < 0)
+energy_buy:
+  friendly_name: "Energy Buy"
+  unit_of_measurement: "W"
+  value_template: >-
+    {{ '%i'|format((iif(states('sensor.active_power_l1')|float < 0, states('sensor.active_power_l1')|float, 0) + iif(states('sensor.active_power_l2')|float < 0, states('sensor.active_power_l2')|float, 0) + iif(states('sensor.active_power_l3')|float < 0, states('sensor.active_power_l3')|float, 0)) * -1) }}
+# Template sensor for values of energy sold (active_power > 0)
+energy_sell:
+  friendly_name: "Energy Sell"
+  unit_of_measurement: "W"
+  value_template: >-
+    {{ '%i'|format((iif(states('sensor.active_power_l1')|float > 0, states('sensor.active_power_l1')|float, 0) + iif(states('sensor.active_power_l2')|float > 0, states('sensor.active_power_l2')|float, 0) + iif(states('sensor.active_power_l3')|float > 0, states('sensor.active_power_l3')|float, 0))) }}
