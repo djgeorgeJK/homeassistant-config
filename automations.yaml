@@ -1,0 +1,383 @@
+- id: '1657282976191'
+  alias: bazen Sepni kdyz Sviti
+  description: ''
+  trigger:
+  - platform: time
+    at:
+    - 08:30:00
+    - 09:00:00
+    - 09:30:00
+    - '10:00:00'
+    - '10:30:00'
+    - '11:00:00'
+    - '11:30:00'
+    - '12:00:00'
+    - '13:00:00'
+    - '14:35:00'
+  condition:
+  - type: is_power
+    condition: device
+    device_id: c8d183260eb3dd9fccaf2733a04ce703
+    entity_id: sensor.pv_power
+    domain: sensor
+    above: 1100
+  action:
+  - type: turn_on
+    device_id: 075551824346b69adb87f53f443e64b1
+    entity_id: switch.zasuvka_bazen
+    domain: switch
+  - delay:
+      hours: 0
+      minutes: 10
+      seconds: 0
+      milliseconds: 0
+  - type: turn_off
+    device_id: 075551824346b69adb87f53f443e64b1
+    entity_id: switch.zasuvka_bazen
+    domain: switch
+  mode: single
+- id: '1657544075549'
+  alias: bazen vypni
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - switch.zasuvka_bazen
+    to: 'On'
+    for:
+      hours: 0
+      minutes: 40
+      seconds: 0
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 075551824346b69adb87f53f443e64b1
+    entity_id: switch.zasuvka_bazen
+    domain: switch
+  mode: single
+- id: '1657778092581'
+  alias: Bojler nasi
+  description: ''
+  trigger:
+  - type: power
+    platform: device
+    device_id: c8d183260eb3dd9fccaf2733a04ce703
+    entity_id: sensor.pv_power
+    domain: sensor
+    above: 1000
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 66befb2de15919df03217521fb52d96e
+    entity_id: switch.tasmotaplug1
+    domain: switch
+  mode: single
+- id: '1657910644589'
+  alias: Bojler nasi off
+  description: ''
+  trigger:
+  - type: power
+    platform: device
+    device_id: c8d183260eb3dd9fccaf2733a04ce703
+    entity_id: sensor.pv_power
+    domain: sensor
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+    below: 200
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 66befb2de15919df03217521fb52d96e
+    entity_id: switch.tasmotaplug1
+    domain: switch
+  mode: single
+- id: '1657955556707'
+  alias: Garaz_button_autom
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_button.ring_bell
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+  condition: []
+  action:
+  - type: turn_on
+    device_id: a0a0793776dc75a84daa397dece06801
+    entity_id: switch.tasmota_c4dd5701b4b4_switch_relay_1
+    domain: switch
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - type: turn_off
+    device_id: a0a0793776dc75a84daa397dece06801
+    entity_id: switch.tasmota_c4dd5701b4b4_switch_relay_1
+    domain: switch
+  mode: single
+- id: '1658300678658'
+  alias: Varic_Tasmota_Plug_2
+  description: Zapne zasuvku na danou dobu
+  trigger:
+  - platform: device
+    domain: tasmota
+    device_id: 3e841dbe590cb5993e6c4132ce003bcb
+    type: button_short_press
+    subtype: button_1
+    discovery_id: 70039F6C9575_button_1_SINGLE
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: device
+        type: is_off
+        device_id: 3e841dbe590cb5993e6c4132ce003bcb
+        entity_id: switch.tasmotaplug2
+        domain: switch
+      sequence:
+      - type: turn_on
+        device_id: 3e841dbe590cb5993e6c4132ce003bcb
+        entity_id: switch.tasmotaplug2
+        domain: switch
+      - type: turn_on
+        device_id: 3e841dbe590cb5993e6c4132ce003bcb
+        entity_id: switch.tasmota_70039f6c9575_switch_relay_1
+        domain: switch
+      - delay:
+          hours: 0
+          minutes: 65
+          seconds: 0
+          milliseconds: 0
+      - type: turn_off
+        device_id: 3e841dbe590cb5993e6c4132ce003bcb
+        entity_id: switch.tasmota_70039f6c9575_switch_relay_1
+        domain: switch
+      - type: turn_off
+        device_id: 3e841dbe590cb5993e6c4132ce003bcb
+        entity_id: switch.tasmotaplug2
+        domain: switch
+    - conditions:
+      - condition: device
+        type: is_on
+        device_id: 3e841dbe590cb5993e6c4132ce003bcb
+        entity_id: switch.tasmotaplug2
+        domain: switch
+      sequence:
+      - type: turn_off
+        device_id: 3e841dbe590cb5993e6c4132ce003bcb
+        entity_id: switch.tasmotaplug2
+        domain: switch
+      - type: turn_off
+        device_id: 3e841dbe590cb5993e6c4132ce003bcb
+        entity_id: switch.tasmota_70039f6c9575_switch_relay_1
+        domain: switch
+    default: []
+  mode: restart
+- id: '1658477409691'
+  alias: Time triger Automat
+  description: ''
+  trigger:
+  - platform: time_pattern
+    seconds: /15
+  condition: []
+  action:
+  - service: input_boolean.toggle
+    data: {}
+    target:
+      entity_id: input_boolean.alexa_tapo_bplug1
+  mode: single
+- id: '1660422556306'
+  alias: Svetylka u garaze on/off
+  description: Zapne /vypne svetla dle slunce
+  trigger:
+  - platform: sun
+    event: sunrise
+    offset: -01:00:00
+  - platform: sun
+    event: sunset
+    offset: 01:00
+  condition: []
+  action:
+  - if:
+    - condition: sun
+      before: sunset
+      after: sunrise
+      before_offset: '1:00:00'
+      after_offset: '-2:00'
+    then:
+    - type: turn_off
+      device_id: a0a0793776dc75a84daa397dece06801
+      entity_id: switch.tasmota_dual_1_re1
+      domain: switch
+    else:
+    - type: turn_on
+      device_id: a0a0793776dc75a84daa397dece06801
+      entity_id: switch.tasmota_dual_1_re1
+      domain: switch
+  mode: single
+- id: '1660503434010'
+  alias: Kurnik dvirka open/close
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunset
+    offset: '1:10'
+  - platform: sun
+    event: sunrise
+    offset: 0
+  - platform: state
+    entity_id:
+    - switch.kurnik_dvirka
+    from: unavailable
+  condition: []
+  action:
+  - if:
+    - condition: sun
+      before: sunset
+      after: sunrise
+    then:
+    - type: turn_on
+      device_id: def26c6703d22100556c473b1258ccfc
+      entity_id: switch.kurnik_dvirka
+      domain: switch
+    else:
+    - type: turn_off
+      device_id: def26c6703d22100556c473b1258ccfc
+      entity_id: switch.kurnik_dvirka
+      domain: switch
+  mode: single
+- id: '1661112294945'
+  alias: Kurnik svetlo on
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunset
+    offset: 0
+  condition:
+  - condition: state
+    entity_id: sensor.is_sun_vychod_after8hr
+    state: 'true'
+  action:
+  - type: turn_on
+    device_id: df1591e0cae4b0ac740da5e9c3e9c00e
+    entity_id: switch.kurnik_svetloa
+    domain: switch
+  mode: single
+- id: '1661174888645'
+  alias: Kurnik světlo off
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunrise
+    offset: '-8:00:00'
+  condition: []
+  action:
+  - type: turn_off
+    device_id: df1591e0cae4b0ac740da5e9c3e9c00e
+    entity_id: switch.kurnik_svetloa
+    domain: switch
+  mode: single
+- id: '1665082311796'
+  alias: Voda notifikace
+  description: ''
+  trigger:
+  - platform: time
+    at: '15:30:00'
+  condition:
+  - type: is_value
+    condition: device
+    device_id: 01c62a8a2529396715809be352da2262
+    entity_id: sensor.dhw_up
+    domain: sensor
+    below: 32
+  action:
+  - service: notify.mobile_app_sm_a536b
+    data:
+      message: je nizka teplota Vody11
+      title: Zatop v Krbu!!
+  - service: notify.mobile_app_sm_a525f
+    data:
+      message: Zatop v Krbu!!
+      title: Je nizka teplota uzitkove vody.
+  mode: single
+- id: '1665083275616'
+  alias: Krb vyhasina
+  description: ''
+  trigger:
+  - type: value
+    platform: device
+    device_id: 2657d9b0facfd1f4612bcd9270a05f40
+    entity_id: sensor.krb_temp
+    domain: sensor
+    below: 30
+  condition: []
+  action:
+  - service: notify.notify
+    data: {}
+  mode: single
+- id: '1669576692629'
+  alias: Vanocni svetla on/off by sun
+  description: Zapne /vypne svetla strechy dle slunce
+  trigger:
+  - platform: sun
+    event: sunrise
+    offset: -00:40:00
+  - platform: sun
+    event: sunset
+    offset: 01:00
+  condition: []
+  action:
+  - if:
+    - condition: sun
+      before: sunset
+      after: sunrise
+      before_offset: '1:00:00'
+      after_offset: '-2:00'
+    then:
+    - type: turn_off
+      device_id: 075551824346b69adb87f53f443e64b1
+      entity_id: switch.zasuvka_bazen
+      domain: switch
+    else:
+    - type: turn_on
+      device_id: 075551824346b69adb87f53f443e64b1
+      entity_id: switch.zasuvka_bazen
+      domain: switch
+  mode: single
+- id: '1669786660258'
+  alias: Vanocni svetla off v noci
+  description: vypne svetla strechy dle casu
+  trigger:
+  - platform: time_pattern
+    minutes: '00'
+    hours: '20'
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 075551824346b69adb87f53f443e64b1
+    entity_id: switch.zasuvka_bazen
+    domain: switch
+  mode: single
+- id: '1670075468982'
+  alias: Vanocni svetla zapni rano
+  description: vypne svetla strechy dle casu
+  trigger:
+  - platform: time_pattern
+    minutes: '30'
+    hours: '05'
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 075551824346b69adb87f53f443e64b1
+    entity_id: switch.zasuvka_bazen
+    domain: switch
+  mode: single

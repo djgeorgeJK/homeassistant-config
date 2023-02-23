@@ -20,36 +20,42 @@ goodwe_total_pv_generation_year:
   value_template: >-
     {{(states('sensor.total_pv_generation')|int-7243.1)|round(1)}}
 
+goarage_door_closed:
+  friendly_name: "Garage door closed"
+  unit_of_measurement: "%"
+  value_template: >-
+    {{280 / (states('sensor.tasmota_dual_1_sr04_distance')|int)|round(10)}}
+
 # # Virtualni sensory - Parsrovani Aktive Tasks
 is_dhw_request:
   friendly_name: "Vraci true kdyz je DHW request"
   value_template: >-
-    {% if states('sensor.akc_new_active_tasks')|int|bitwise_and(1)== 1 -%}
+    {% if states('sensor.akc_activetasks')|int|bitwise_and(1)== 1 -%}
       true {%- else -%} false {%- endif %}
 is_krb_active:
   friendly_name: "Vraci true kdyz jede krb cerpadlo"
   value_template: >-
-    {% if states('sensor.akc_new_active_tasks')|int|bitwise_and(2)== 2 -%}
+    {% if states('sensor.akc_activetasks')|int|bitwise_and(2)== 2 -%}
       true {%- else -%} false {%- endif %}
 is_night_tarif:
   friendly_name: "Vraci true kdyz je prave nocni proud"
   value_template: >-
-    {% if states('sensor.akc_new_active_tasks')|int|bitwise_and(4)== 4 -%}
+    {% if states('sensor.akc_active_tasks')|int|bitwise_and(4)== 4 -%}
       true {%- else -%} false {%- endif %}
 is_floor_pump:
   friendly_name: "Floor active task"
   value_template: >-
-    {% if states('sensor.akc_new_active_tasks')|int|bitwise_and(16)== 16 -%}
+    {% if states('sensor.akc_active_tasks')|int|bitwise_and(16)== 16 -%}
       true {%- else -%} false {%- endif %}
 is_bath_request:
   friendly_name: "Bath radiator request active"
   value_template: >-
-    {% if states('sensor.akc_new_active_tasks')|int|bitwise_and(64)== 64 -%}
+    {% if states('sensor.akc_active_tasks')|int|bitwise_and(64)== 64 -%}
       true {%- else -%} false {%- endif %}
 is_solar_pump:
   friendly_name: "Solar cerpadlo on"
   value_template: >-
-    {% if states('sensor.akc_new_active_tasks')|int|bitwise_and(128)== 128 -%}
+    {% if states('sensor.akc_active_tasks')|int|bitwise_and(128)== 128 -%}
       true {%- else -%} false {%- endif %}
 # Virtualni sensory - Parsrovani Zone
 akc_zone_1:
