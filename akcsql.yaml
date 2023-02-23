@@ -1,0 +1,107 @@
+# list of pimport SQL registers from AKC
+- name: akc_pokus
+  #unique_id: 'akc pokus' 
+  query: "SELECT value_f from HeatingAKC.MR_RAM where reg=20"
+  column: "value_f"
+  unit_of_measurement: "°C"
+
+#- unique_id: "akc_layer_top"
+- name: "AKC Layer TOPn"
+  query: "SELECT value_f from HeatingAKC.MR_RAM where reg=20"
+  column: "value_f"
+  unit_of_measurement: °C
+
+# - name: "AKC Layer TOPnew"
+#   query: "SELECT value_f from HeatingAKC.MR_RAM where reg=20"
+#   column: "value_f"
+#   unit_of_measurement: "°C"
+
+# - unique_id: akc_layer_1
+#   frendly_name: "AKC Layer 1 new"
+#   query: "SELECT value_f from HeatingAKC.MR_RAM where reg=21"
+#   column: "value_f"
+#   unit_of_measurement: "°C"
+# - unique_id: akc_layer_2
+#   name: "AKC Layer 2"
+#   query: "SELECT value_f from HeatingAKC.MR_RAM where reg=22"
+#   column: "value_f"
+#   unit_of_measurement: "°C"
+# - unique_id: akc_layer_3
+#   name: "AKC Layer 3"
+#   query: "SELECT value_f from HeatingAKC.MR_RAM where reg=23"
+#   column: "value_f"
+#   unit_of_measurement: "°C"
+# - unique_id: akc_layer_4
+#   name: "AKC Layer 4"
+#   query: "SELECT value_f from HeatingAKC.MR_RAM where reg=24"
+#   column: "value_f"
+#   unit_of_measurement: "°C"
+
+# - unique_id: akc_krb_temp
+#   name: "KRB Temperature"
+#   query: "SELECT value_f from HeatingAKC.MR_RAM where reg=14"
+#   column: "value_f"
+#   unit_of_measurement: "°C"
+
+# - unique_id: akc_dhw_up
+#   name: "DHW up"
+#   query: "SELECT value_f from HeatingAKC.MR_RAM where reg=15"
+#   column: "value_f"
+#   unit_of_measurement: °C
+
+# - unique_id: "akc_dhw_down"
+#   friendly_name: "DHW down"
+#   query: "SELECT value_f from HeatingAKC.MR_RAM where reg=16"
+#   column: "value_f"
+#   unit_of_measurement: °C
+
+# - unique_id: "akc_active_tasks"
+#   name: "AKC active tasks"
+#   query: "SELECT value_U16 from HeatingAKC.MR_RAM where reg=8"
+#   column: "value_U16"
+
+# - unique_id: "akc_solar_roof"
+#   name: "AKC Solar Roof"
+#   query: "SELECT value_f from HeatingAKC.MR_RAM where reg=32"
+#   column: "value_f"
+#   unit_of_measurement: °C
+
+# - unique_id: "akc_zone_no"
+#   name: "akc aktivni zone"
+#   query: "SELECT value_U16 from HeatingAKC.MR_RAM where reg=10"
+#   column: "value_U16"
+
+# - unique_id: "akc_relays"
+#   name: "akc relays"
+#   query: "SELECT value_U16 from HeatingAKC.MR_RAM where reg=9"
+#   column: "value_U16"
+
+# - unique_id: "akc_relay_krb"
+#   name: "akc relay krb"
+#   query: "SELECT value_U16 from HeatingAKC.MR_RAM where reg=9"
+#   column: "value_U16"
+#   #value_template: '{{ value | int }}''
+
+# - name: AKC Solar Threshold on
+#   query: "SELECT value_f from HeatingAKC.MR_RAM where reg = 73"
+#   column: "value_f"
+#   unit_of_measurement: °C
+
+# - name: AKC Solar Threshold off
+#   query: "SELECT value_f from HeatingAKC.MR_RAM where reg = 74"
+#   column: "value_f"
+#   unit_of_measurement: °C
+
+# - name: AKC Floor distributor
+#   query: "SELECT value_f from HeatingAKC.MR_RAM where reg = 31"
+#   column: "value_f"
+#   unit_of_measurement: °C
+
+# - name: AKC Floor valve
+#   query: "SELECT value_f from HeatingAKC.MR_RAM where reg = 30"
+#   column: "value_f"
+#   unit_of_measurement: °C
+
+# - name: AKC HP status
+#   query: "SELECT value_f from HeatingAKC.MR_RAM where reg = 11"
+#   column: "value_f"

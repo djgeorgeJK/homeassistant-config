@@ -1,0 +1,141 @@
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Allows use of python scripts in folder  python_scripts
+python_script:
+
+ebusd:
+  host: 192.168.100.18
+  circuit: ( "700", "fmu", "hmu", "vwz", "sol")
+  #circuit: "heating", ehp bai, 700, "21576", ""hmu
+
+shell_command:
+  pokpythscript1: "python3 /config/python_scripts/helloW2.py"
+
+recorder:
+  purge_keep_days: 60
+  db_url: mysql://homeassistant:securedpassword@192.168.100.18/homeassistant?charset=utf8mb4
+  #db_url: mysql://homeassistant:securedpassword@cdb/hore-mariaomeassistant?charset=utf8mb4
+  #db_url: mysql://jiri:548329@192.168.100.18/HeatingAKC
+  include:
+    domains:
+      - sensor
+      - switch
+      #- media_player
+
+# Enables
+logger:
+  default: info
+  logs:
+    # log level for all python scripts
+    homeassistant.components.python_script: debug
+    # individual log level for this python script
+    #homeassistant.components.python_script.my_new_script.py: debug
+    # log level for SmartThings lights
+    #homeassistant.components.smartthings.light: info
+    # log level for a custom component
+    #custom_components.my_integration: debug
+
+    # log level for both 'glances_api' and 'glances' integration
+    homeassistant.components.glances: fatal
+    glances_api: fatal
+
+input_button:
+  ring_bell:
+    name: RingBell
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+# vytvareni entit pro mqtt - posilam z PC pythonu - funguje
+mqtt:
+  number:
+    - name: "AKC Floor"
+      state_topic: "rasp/AKC/FllorEquit/get"
+      command_topic: "rasp/AKC/FllorEquit/set"
+
+    - unique_id: "ebusd desired"
+      name: "ebusd 700 desired Day"
+      state_topic: "ebusd/700/z1ActualRoomTempDesired"
+      #value_template: "{{value_json['tempv'].value}}"
+      unit_of_measurement: "C"
+      command_topic: "ebusd/700/z1ActualRoomTempDesired/set"
+      min: 14
+      max: 28
+      step: 1
+
+  switch:
+    # Zasuvka Beken PLug 4
+    - unique_id: "OpenBK7231T_8DD1CD9A_relay_0"
+      name: "BK_Plug4 0"
+      state_topic: "OpenBK_Plug4/0/get"
+      command_topic: "OpenBK_Plug4/0/set"
+      qos: 1
+      payload_on: 1
+      payload_off: 0
+      retain: true
+      availability:
+        - topic: "OpenBK_Plug4/connected"
+    - unique_id: "ryzenzprava"
+      name: "ryzen_pok"
+      state_topic: "ryzen/koupel/get"
+      command_topic: "ryzen/koupel/set"
+
+    - unique_id: "light_2np_l1"
+      name: "Light_2NP_L1"
+      state_topic: "rasp/light2NP/L1/get"
+      command_topic: "rasp/light2NP/L1/set"
+    - name: "Light_2NP_L2"
+      state_topic: "rasp/light2NP/L2/get"
+      command_topic: "rasp/light2NP/L2/set"
+    - unique_id: "light_2np_l3"
+      name: "light 2np Terasa"
+      state_topic: "rasp/light2NP/L3/get"
+      command_topic: "rasp/light2NP/L3/set"
+    - name: "Light_2NP_L4"
+      state_topic: "rasp/light2NP/L4/get"
+      command_topic: "rasp/light2NP/L4/set"
+    - name: "Light_2NP_L5"
+      state_topic: "rasp/light2NP/L5/get"
+      command_topic: "rasp/light2NP/L5/set"
+    - name: "Light_2NP_L6"
+      state_topic: "rasp/light2NP/L6/get"
+      command_topic: "rasp/light2NP/L6/set"
+    - name: "Light_2NP_L7"
+      state_topic: "rasp/light2NP/L7/get"
+      command_topic: "rasp/light2NP/L7/set"
+    - name: "Light_2NP_L8"
+      state_topic: "rasp/light2NP/L8/get"
+      command_topic: "rasp/light2NP/L8/set"
+
+  sensor:
+    - name: "ebusd hmu compresor percentage"
+      unique_id: "ebusd_hmu_compresor_percentage"
+      state_topic: "ebusd/hmu/State"
+      unit_of_measurement: "%"
+      "device":
+        "identifiers": "ebusd_hmu"
+        "manufacturer": "ebusd.eu"
+        "name": "ebusd hmu"
+        "via_device": "ebusd"
+        "sw_version": "23.1"
+
+      value_template: '{{value_json["0"].value}}'
+    - name: "hp_status"
+      state_topic: "ebusd/hmu/State"
+      value_template: '{{value_json["3"].value}}'
+
+#Template
+sensor:
+  - platform: sql
+    db_url: mysql://python:548329@192.168.100.18/HeatingAKC?charset=utf8
+    scan_interval: 300
+    queries: !include akcsql.yaml
+
+  - platform: template
+    sensors: !include akcsensors.yaml
